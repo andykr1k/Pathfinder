@@ -1,3 +1,4 @@
 env/
 pi/env/
 mac/env/
+__pycache__
