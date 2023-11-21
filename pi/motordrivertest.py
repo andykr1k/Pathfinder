@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO          
 from time import sleep
 
+# Front Driver
 d1_en1a = 15
 d1_en1b = 18
 d1_in1 = 13
@@ -8,6 +9,7 @@ d1_in2 = 11
 d1_in3 = 12
 d1_in4 = 16
 
+# Back Driver
 d2_en1a = 37
 d2_en1b = 40
 d2_in1 = 35
