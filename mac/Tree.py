@@ -8,13 +8,16 @@ class Tree:
         self.root = root
 
     def print_tree(self):
-        self.print_tree_helper(self.root)
-
-    def print_tree_helper(self, node):
-        node.print_node()
-
-        if len(self.root.children) == 0:
+        if self.root is None:
             return
-        
-        for child in node.children:
-            self.print_tree_helper(child)
+
+        queue = [self.root]
+        layer = 1
+
+        while len(queue) > 0:
+            cur_node = queue.pop(0)
+            cur_node.print_node()
+
+            if len(cur_node.children) > 0:
+                for child in cur_node.children:
+                    queue.append(child)

@@ -20,6 +20,6 @@ class TreeNode:
 
     def generate_forward_movement(self, node):
         return 1
-    
+
     def generate_backward_movement(self, node):
         return -1
