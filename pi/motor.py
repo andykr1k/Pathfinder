@@ -231,7 +231,7 @@ while (instruct != "q"):
                     GPIO.output(d2_in4, False)
                     sleep(2)
         elif instruct[1] == "c":
-                if instruct[3] == "s":
+                if instruct[2] == "s":
                     # p1a.ChangeDutyCycle(25)
                     # p1b.ChangeDutyCycle(25)
                     GPIO.output(d2_in1, False)
@@ -252,7 +252,7 @@ while (instruct != "q"):
                     GPIO.output(d2_in3, False)
                     GPIO.output(d2_in4, False)
                     sleep(2)
-                elif instruct[3] == "m":
+                elif instruct[2] == "m":
                     # p1a.ChangeDutyCycle(50)
                     # p1b.ChangeDutyCycle(50)
                     GPIO.output(d2_in1, False)
@@ -273,7 +273,7 @@ while (instruct != "q"):
                     GPIO.output(d2_in3, False)
                     GPIO.output(d2_in4, False)
                     sleep(2)
-                elif instruct[3] == "f":
+                elif instruct[2] == "f":
                     # p1a.ChangeDutyCycle(75)
                     # p1b.ChangeDutyCycle(75)
                     GPIO.output(d2_in1, False)
@@ -478,7 +478,7 @@ while (instruct != "q"):
                     GPIO.output(d2_in4, False)
                     sleep(2)
         elif instruct[1] == "c":
-            if instruct[3] == "s":
+            if instruct[2] == "s":
                 # p1a.ChangeDutyCycle(25)
                 # p1b.ChangeDutyCycle(25)
                 GPIO.output(d2_in1, True)
@@ -499,7 +499,7 @@ while (instruct != "q"):
                 GPIO.output(d2_in3, False)
                 GPIO.output(d2_in4, False)
                 sleep(2)
-            elif instruct[3] == "m":
+            elif instruct[2] == "m":
                 # p1a.ChangeDutyCycle(50)
                 # p1b.ChangeDutyCycle(50)
                 GPIO.output(d2_in1, True)
@@ -520,7 +520,7 @@ while (instruct != "q"):
                 GPIO.output(d2_in3, False)
                 GPIO.output(d2_in4, False)
                 sleep(2)
-            elif instruct[3] == "f":
+            elif instruct[2] == "f":
                 # p1a.ChangeDutyCycle(75)
                 # p1b.ChangeDutyCycle(75)
                 GPIO.output(d2_in1, True)
@@ -543,15 +543,6 @@ while (instruct != "q"):
                 sleep(2)
     print("What are your instructions sir? [direction, set, wheel, speed]")
     instruct = input()
-
-# Work on this!
-# forwardBackLeft()
-# forwardBackRight()
-# forwardBack()
-
-# backwardBackLeft()
-# backwardBackRight()
-# backwardBack()
 
 GPIO.output(d1_en1a, False)
 GPIO.output(d1_en1b, False)
