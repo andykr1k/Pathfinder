@@ -43,239 +43,10 @@ GPIO.output(d1_en1b, True)
 GPIO.output(d2_en1a, True)
 GPIO.output(d2_en1b, True)
 
-def backwardFront():
-    GPIO.output(d1_in1, False)
-    GPIO.output(d1_in2, False)
-    GPIO.output(d1_in3, False)
-    GPIO.output(d1_in4, False)
-    sleep(2)
-    
-    GPIO.output(d1_in1, False)
-    GPIO.output(d1_in2, True)
-    GPIO.output(d1_in3, True)
-    GPIO.output(d1_in4, False)
-    sleep(2)
-
-    GPIO.output(d1_in1, False)
-    GPIO.output(d1_in2, False)
-    GPIO.output(d1_in3, False)
-    GPIO.output(d1_in4, False)
-    sleep(2)
-
-def forwardFront():
-    GPIO.output(d1_in1, False)
-    GPIO.output(d1_in2, False)
-    GPIO.output(d1_in3, False)
-    GPIO.output(d1_in4, False)
-    sleep(2)
-
-    GPIO.output(d1_in1, True)
-    GPIO.output(d1_in2, False)
-    GPIO.output(d1_in3, False)
-    GPIO.output(d1_in4, True)
-    sleep(2)
-
-    GPIO.output(d1_in1, False)
-    GPIO.output(d1_in2, False)
-    GPIO.output(d1_in3, False)
-    GPIO.output(d1_in4, False)
-    sleep(2)
-
-def forwardFrontRight():
-    GPIO.output(d1_in1, False)
-    GPIO.output(d1_in2, False)
-    sleep(2)
-
-    GPIO.output(d1_in1, True)
-    GPIO.output(d1_in2, False)
-    sleep(2)
-
-    GPIO.output(d1_in1, False)
-    GPIO.output(d1_in2, False)
-    sleep(2)
-
-def backwardFrontRight():
-    GPIO.output(d1_in1, False)
-    GPIO.output(d1_in2, False)
-    sleep(2)
-
-    GPIO.output(d1_in1, False)
-    GPIO.output(d1_in2, True)
-    sleep(2)
-
-    GPIO.output(d1_in1, False)
-    GPIO.output(d1_in2, False)
-    sleep(2)
-
-def forwardFrontLeft():
-    GPIO.output(d1_in3, False)
-    GPIO.output(d1_in4, False)
-    sleep(2)
-
-    GPIO.output(d1_in3, False)
-    GPIO.output(d1_in4, True)
-    sleep(2)
-
-    GPIO.output(d1_in3, False)
-    GPIO.output(d1_in4, False)
-    sleep(2)
-
-def backwardFrontLeft():
-    GPIO.output(d1_in3, False)
-    GPIO.output(d1_in4, False)
-    sleep(2)
-
-    GPIO.output(d1_in3, True)
-    GPIO.output(d1_in4, False)
-    sleep(2)
-
-    GPIO.output(d1_in3, False)
-    GPIO.output(d1_in4, False)
-    sleep(2)
-
-
-def backwardBack():
-    GPIO.output(d2_in1, False)
-    GPIO.output(d2_in2, False)
-    GPIO.output(d2_in3, False)
-    GPIO.output(d2_in4, False)
-    sleep(2)
-
-    GPIO.output(d2_in1, False)
-    GPIO.output(d2_in2, True)
-    GPIO.output(d2_in3, True)
-    GPIO.output(d2_in4, False)
-    sleep(2)
-
-    GPIO.output(d2_in1, False)
-    GPIO.output(d2_in2, False)
-    GPIO.output(d2_in3, False)
-    GPIO.output(d2_in4, False)
-    sleep(2)
-
-
-def forwardBack():
-    GPIO.output(d2_in1, False)
-    GPIO.output(d2_in2, False)
-    GPIO.output(d2_in3, False)
-    GPIO.output(d2_in4, False)
-    sleep(2)
-
-    GPIO.output(d2_in1, True)
-    GPIO.output(d2_in2, False)
-    GPIO.output(d2_in3, False)
-    GPIO.output(d2_in4, True)
-    sleep(2)
-
-    GPIO.output(d2_in1, False)
-    GPIO.output(d2_in2, False)
-    GPIO.output(d2_in3, False)
-    GPIO.output(d2_in4, False)
-    sleep(2)
-
-
-def forwardBackRight():
-    GPIO.output(d2_in1, False)
-    GPIO.output(d2_in2, False)
-    sleep(2)
-
-    GPIO.output(d2_in1, True)
-    GPIO.output(d2_in2, False)
-    sleep(2)
-
-    GPIO.output(d2_in1, False)
-    GPIO.output(d2_in2, False)
-    sleep(2)
-
-
-def backwardBackRight():
-    GPIO.output(d2_in1, False)
-    GPIO.output(d2_in2, False)
-    sleep(2)
-
-    GPIO.output(d2_in1, False)
-    GPIO.output(d2_in2, True)
-    sleep(2)
-
-    GPIO.output(d2_in1, False)
-    GPIO.output(d2_in2, False)
-    sleep(2)
-
-
-def forwardBackLeft():
-    GPIO.output(d2_in3, False)
-    GPIO.output(d2_in4, False)
-    sleep(2)
-
-    GPIO.output(d2_in3, False)
-    GPIO.output(d2_in4, True)
-    sleep(2)
-
-    GPIO.output(d2_in3, False)
-    GPIO.output(d2_in4, False)
-    sleep(2)
-
-
-def backwardBackLeft():
-    GPIO.output(d2_in3, False)
-    GPIO.output(d2_in4, False)
-    sleep(2)
-
-    GPIO.output(d2_in3, True)
-    GPIO.output(d2_in4, False)
-    sleep(2)
-
-    GPIO.output(d2_in3, False)
-    GPIO.output(d2_in4, False)
-    sleep(2)
-
-# forwardFrontLeft()
-# forwardFrontRight()
-# forwardFront()
-
-# backwardFrontLeft()
-# backwardFrontRight()
-# backwardFront()
-
 print("What are your instructions sir? [direction, set, wheel, speed]")
 instruct = input()
 
 while (instruct != "q"):
-    if instruct == "test":
-        # Back Right Forward
-        GPIO.output(d2_in1, False)
-        GPIO.output(d2_in2, True)
-        sleep(2)
-
-        GPIO.output(d2_in1, False)
-        GPIO.output(d2_in2, False)
-        sleep(2)
-
-        # Back Right Backward
-        # GPIO.output(d2_in1, True)
-        # GPIO.output(d2_in2, False)
-        # sleep(2)
-
-        # GPIO.output(d2_in1, False)
-        # GPIO.output(d2_in2, False)
-        # sleep(2)
-
-        # Back Left Backward
-        # GPIO.output(d2_in3, False)
-        # GPIO.output(d2_in4, True)
-        # sleep(2)
-
-        # GPIO.output(d2_in3, False)
-        # GPIO.output(d2_in4, False)
-        # sleep(2)
-
-        # Back Left Forward
-        GPIO.output(d2_in3, True)
-        GPIO.output(d2_in4, False)
-        sleep(2)
-        GPIO.output(d2_in3, False)
-        GPIO.output(d2_in4, False)
-        sleep(2)
     if instruct[0] == "f":
         if instruct[1] == "f":
             if instruct[2] == "l":
@@ -459,6 +230,70 @@ while (instruct != "q"):
                     GPIO.output(d2_in3, False)
                     GPIO.output(d2_in4, False)
                     sleep(2)
+        elif instruct[1] == "c":
+                if instruct[3] == "s":
+                    # p1a.ChangeDutyCycle(25)
+                    # p1b.ChangeDutyCycle(25)
+                    GPIO.output(d2_in1, False)
+                    GPIO.output(d2_in2, True)
+                    GPIO.output(d2_in3, True)
+                    GPIO.output(d2_in4, False)
+                    GPIO.output(d1_in1, False)
+                    GPIO.output(d1_in2, True)
+                    GPIO.output(d1_in3, False)
+                    GPIO.output(d1_in4, True)
+                    sleep(2)
+                    GPIO.output(d1_in1, False)
+                    GPIO.output(d1_in2, False)
+                    GPIO.output(d1_in3, False)
+                    GPIO.output(d1_in4, False)
+                    GPIO.output(d2_in1, False)
+                    GPIO.output(d2_in2, False)
+                    GPIO.output(d2_in3, False)
+                    GPIO.output(d2_in4, False)
+                    sleep(2)
+                elif instruct[3] == "m":
+                    # p1a.ChangeDutyCycle(50)
+                    # p1b.ChangeDutyCycle(50)
+                    GPIO.output(d2_in1, False)
+                    GPIO.output(d2_in2, True)
+                    GPIO.output(d2_in3, True)
+                    GPIO.output(d2_in4, False)
+                    GPIO.output(d1_in1, False)
+                    GPIO.output(d1_in2, True)
+                    GPIO.output(d1_in3, False)
+                    GPIO.output(d1_in4, True)
+                    sleep(2)
+                    GPIO.output(d1_in1, False)
+                    GPIO.output(d1_in2, False)
+                    GPIO.output(d1_in3, False)
+                    GPIO.output(d1_in4, False)
+                    GPIO.output(d2_in1, False)
+                    GPIO.output(d2_in2, False)
+                    GPIO.output(d2_in3, False)
+                    GPIO.output(d2_in4, False)
+                    sleep(2)
+                elif instruct[3] == "f":
+                    # p1a.ChangeDutyCycle(75)
+                    # p1b.ChangeDutyCycle(75)
+                    GPIO.output(d2_in1, False)
+                    GPIO.output(d2_in2, True)
+                    GPIO.output(d2_in3, True)
+                    GPIO.output(d2_in4, False)
+                    GPIO.output(d1_in1, False)
+                    GPIO.output(d1_in2, True)
+                    GPIO.output(d1_in3, False)
+                    GPIO.output(d1_in4, True)
+                    sleep(2)
+                    GPIO.output(d1_in1, False)
+                    GPIO.output(d1_in2, False)
+                    GPIO.output(d1_in3, False)
+                    GPIO.output(d1_in4, False)
+                    GPIO.output(d2_in1, False)
+                    GPIO.output(d2_in2, False)
+                    GPIO.output(d2_in3, False)
+                    GPIO.output(d2_in4, False)
+                    sleep(2)
     elif instruct[0] == "b":
         if instruct[1] == "f":
             if instruct[2] == "l":
@@ -469,6 +304,7 @@ while (instruct != "q"):
                     sleep(2)
                     GPIO.output(d1_in3, False)
                     GPIO.output(d1_in4, False)
+                    sleep(2)
                 elif instruct[3] == "m":
                     # p1b.ChangeDutyCycle(50)
                     GPIO.output(d1_in3, True)
@@ -476,6 +312,7 @@ while (instruct != "q"):
                     sleep(2)
                     GPIO.output(d1_in3, False)
                     GPIO.output(d1_in4, False)
+                    sleep(2)
                 elif instruct[3] == "f":
                     # p1b.ChangeDutyCycle(75)
                     GPIO.output(d1_in3, True)
@@ -483,6 +320,7 @@ while (instruct != "q"):
                     sleep(2)
                     GPIO.output(d1_in3, False)
                     GPIO.output(d1_in4, False)
+                    sleep(2)
             elif instruct[2] == "r":
                 if instruct[3] == "s":
                     # p1a.ChangeDutyCycle(25)
@@ -491,6 +329,7 @@ while (instruct != "q"):
                     sleep(2)
                     GPIO.output(d1_in1, False)
                     GPIO.output(d1_in2, False)
+                    sleep(2)
                 elif instruct[3] == "m":
                     # p1a.ChangeDutyCycle(50)
                     GPIO.output(d1_in1, True)
@@ -498,6 +337,7 @@ while (instruct != "q"):
                     sleep(2)
                     GPIO.output(d1_in1, False)
                     GPIO.output(d1_in2, False)
+                    sleep(2)
                 elif instruct[3] == "f":
                     # p1a.ChangeDutyCycle(75)
                     GPIO.output(d1_in1, True)
@@ -505,6 +345,7 @@ while (instruct != "q"):
                     sleep(2)
                     GPIO.output(d1_in1, False)
                     GPIO.output(d1_in2, False)
+                    sleep(2)
             elif instruct[2] == "b":
                 if instruct[3] == "s":
                     # p1a.ChangeDutyCycle(25)
@@ -518,6 +359,7 @@ while (instruct != "q"):
                     GPIO.output(d1_in2, False)
                     GPIO.output(d1_in3, False)
                     GPIO.output(d1_in4, False)
+                    sleep(2)
                 elif instruct[3] == "m":
                     # p1a.ChangeDutyCycle(50)
                     # p1b.ChangeDutyCycle(50)
@@ -530,6 +372,7 @@ while (instruct != "q"):
                     GPIO.output(d1_in2, False)
                     GPIO.output(d1_in3, False)
                     GPIO.output(d1_in4, False)
+                    sleep(2)
                 elif instruct[3] == "f":
                     # p1a.ChangeDutyCycle(75)
                     # p1b.ChangeDutyCycle(75)
@@ -542,6 +385,7 @@ while (instruct != "q"):
                     GPIO.output(d1_in2, False)
                     GPIO.output(d1_in3, False)
                     GPIO.output(d1_in4, False)
+                    sleep(2)
         elif instruct[1] == "b":
             if instruct[2] == "l":
                 if instruct[3] == "s":
@@ -633,6 +477,70 @@ while (instruct != "q"):
                     GPIO.output(d2_in3, False)
                     GPIO.output(d2_in4, False)
                     sleep(2)
+        elif instruct[1] == "c":
+            if instruct[3] == "s":
+                # p1a.ChangeDutyCycle(25)
+                # p1b.ChangeDutyCycle(25)
+                GPIO.output(d2_in1, True)
+                GPIO.output(d2_in2, False)
+                GPIO.output(d2_in3, False)
+                GPIO.output(d2_in4, True)
+                GPIO.output(d1_in1, True)
+                GPIO.output(d1_in2, False)
+                GPIO.output(d1_in3, True)
+                GPIO.output(d1_in4, False)
+                sleep(2)
+                GPIO.output(d1_in1, False)
+                GPIO.output(d1_in2, False)
+                GPIO.output(d1_in3, False)
+                GPIO.output(d1_in4, False)
+                GPIO.output(d2_in1, False)
+                GPIO.output(d2_in2, False)
+                GPIO.output(d2_in3, False)
+                GPIO.output(d2_in4, False)
+                sleep(2)
+            elif instruct[3] == "m":
+                # p1a.ChangeDutyCycle(50)
+                # p1b.ChangeDutyCycle(50)
+                GPIO.output(d2_in1, True)
+                GPIO.output(d2_in2, False)
+                GPIO.output(d2_in3, False)
+                GPIO.output(d2_in4, True)
+                GPIO.output(d1_in1, True)
+                GPIO.output(d1_in2, False)
+                GPIO.output(d1_in3, True)
+                GPIO.output(d1_in4, False)
+                sleep(2)
+                GPIO.output(d1_in1, False)
+                GPIO.output(d1_in2, False)
+                GPIO.output(d1_in3, False)
+                GPIO.output(d1_in4, False)
+                GPIO.output(d2_in1, False)
+                GPIO.output(d2_in2, False)
+                GPIO.output(d2_in3, False)
+                GPIO.output(d2_in4, False)
+                sleep(2)
+            elif instruct[3] == "f":
+                # p1a.ChangeDutyCycle(75)
+                # p1b.ChangeDutyCycle(75)
+                GPIO.output(d2_in1, True)
+                GPIO.output(d2_in2, False)
+                GPIO.output(d2_in3, False)
+                GPIO.output(d2_in4, True)
+                GPIO.output(d1_in1, True)
+                GPIO.output(d1_in2, False)
+                GPIO.output(d1_in3, True)
+                GPIO.output(d1_in4, False)
+                sleep(2)
+                GPIO.output(d1_in1, False)
+                GPIO.output(d1_in2, False)
+                GPIO.output(d1_in3, False)
+                GPIO.output(d1_in4, False)
+                GPIO.output(d2_in1, False)
+                GPIO.output(d2_in2, False)
+                GPIO.output(d2_in3, False)
+                GPIO.output(d2_in4, False)
+                sleep(2)
     print("What are your instructions sir? [direction, set, wheel, speed]")
     instruct = input()
 
