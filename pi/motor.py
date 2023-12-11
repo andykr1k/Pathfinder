@@ -1,9 +1,6 @@
 import RPi.GPIO as GPIO          
 from time import sleep
 
-def clean():
-    GPIO.cleanup()
-
 # Front 
 d1_en1a = 33
 d1_en1b = 36
@@ -20,89 +17,251 @@ d2_in2 = 18
 d2_in3 = 11
 d2_in4 = 13
 
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(d1_en1a,GPIO.OUT)
-GPIO.setup(d1_en1b,GPIO.OUT)
-GPIO.setup(d1_in1,GPIO.OUT)
-GPIO.setup(d1_in2,GPIO.OUT)
-GPIO.setup(d1_in3,GPIO.OUT)
-GPIO.setup(d1_in4,GPIO.OUT)
-GPIO.setup(d2_en1a,GPIO.OUT)
-GPIO.setup(d2_en1b,GPIO.OUT)
-GPIO.setup(d2_in1,GPIO.OUT)
-GPIO.setup(d2_in2,GPIO.OUT)
-GPIO.setup(d2_in3,GPIO.OUT)
-GPIO.setup(d2_in4,GPIO.OUT)
+def intializeGPIO():
+    GPIO.setmode(GPIO.BOARD)
 
-GPIO.output(d1_en1a, True)
-GPIO.output(d1_en1b, True)
-GPIO.output(d2_en1a, True)
-GPIO.output(d2_en1b, True)
+    GPIO.setup(d1_en1a,GPIO.OUT)
+    GPIO.setup(d1_en1b,GPIO.OUT)
+    GPIO.setup(d1_in1,GPIO.OUT)
+    GPIO.setup(d1_in2,GPIO.OUT)
+    GPIO.setup(d1_in3,GPIO.OUT)
+    GPIO.setup(d1_in4,GPIO.OUT)
 
-# Top Right
-GPIO.output(d1_in1, False)
-GPIO.output(d1_in2, False)
-sleep(2)
+    GPIO.setup(d2_en1a,GPIO.OUT)
+    GPIO.setup(d2_en1b,GPIO.OUT)
+    GPIO.setup(d2_in1,GPIO.OUT)
+    GPIO.setup(d2_in2,GPIO.OUT)
+    GPIO.setup(d2_in3,GPIO.OUT)
+    GPIO.setup(d2_in4,GPIO.OUT)
 
-# Top Right Backwards
-GPIO.output(d1_in1, False)
-GPIO.output(d1_in2, True)
-sleep(2)
+    GPIO.output(d1_en1a, True)
+    GPIO.output(d1_en1b, True)
+    GPIO.output(d2_en1a, True)
+    GPIO.output(d2_en1b, True)
 
-# Top Right Forwards
-GPIO.output(d1_in1, True)
-GPIO.output(d1_in2, False)
-sleep(2)
+    p1a = GPIO.PWM(d1_en1a, 500)
+    p1b = GPIO.PWM(d1_en1b, 500)
+    p2a = GPIO.PWM(d2_en1a, 500)
+    p2b = GPIO.PWM(d2_en1b, 500)
 
-GPIO.output(d1_in1, False)
-GPIO.output(d1_in2, False)
-sleep(2)
+    p1a.ChangeDutyCycle(25)
+    p1b.ChangeDutyCycle(25)
+    p2a.ChangeDutyCycle(25)
+    p2b.ChangeDutyCycle(25)
 
-# Top Left
-GPIO.output(d1_in3, False)
-GPIO.output(d1_in4, False)
-sleep(2)
 
-# Top Left Backwards
-GPIO.output(d1_in3, True)
-GPIO.output(d1_in4, False)
-sleep(2)
+def clean():
+    GPIO.output(d1_en1a, False)
+    GPIO.output(d1_en1b, False)
+    GPIO.output(d2_en1a, False)
+    GPIO.output(d2_en1b, False)
+    GPIO.cleanup()
 
-# Top Left Forwards
-GPIO.output(d1_in3, False)
-GPIO.output(d1_in4, True)
-sleep(2)
+def backwardFront():
+    GPIO.output(d1_in1, False)
+    GPIO.output(d1_in2, False)
+    GPIO.output(d1_in3, False)
+    GPIO.output(d1_in4, False)
+    sleep(2)
+    
+    GPIO.output(d1_in1, False)
+    GPIO.output(d1_in2, True)
+    GPIO.output(d1_in3, True)
+    GPIO.output(d1_in4, False)
+    sleep(2)
 
-GPIO.output(d1_in3, False)
-GPIO.output(d1_in4, False)
-sleep(2)
+    GPIO.output(d1_in1, False)
+    GPIO.output(d1_in2, False)
+    GPIO.output(d1_in3, False)
+    GPIO.output(d1_in4, False)
+    sleep(2)
 
-#Both
-GPIO.output(d1_in1, False)
-GPIO.output(d1_in2, False)
-GPIO.output(d1_in3, False)
-GPIO.output(d1_in4, False)
-sleep(2)
+def forwardFront():
+    GPIO.output(d1_in1, False)
+    GPIO.output(d1_in2, False)
+    GPIO.output(d1_in3, False)
+    GPIO.output(d1_in4, False)
+    sleep(2)
 
-#Both Fowards
-GPIO.output(d1_in1, True)
-GPIO.output(d1_in2, False)
-GPIO.output(d1_in3, False)
-GPIO.output(d1_in4, True)
-sleep(2)
+    GPIO.output(d1_in1, True)
+    GPIO.output(d1_in2, False)
+    GPIO.output(d1_in3, False)
+    GPIO.output(d1_in4, True)
+    sleep(2)
 
-#Both Backwards
-GPIO.output(d1_in1, False)
-GPIO.output(d1_in2, True)
-GPIO.output(d1_in3, True)
-GPIO.output(d1_in4, False)
-sleep(2)
+    GPIO.output(d1_in1, False)
+    GPIO.output(d1_in2, False)
+    GPIO.output(d1_in3, False)
+    GPIO.output(d1_in4, False)
+    sleep(2)
 
-#Both
-GPIO.output(d1_in1, False)
-GPIO.output(d1_in2, False)
-GPIO.output(d1_in3, False)
-GPIO.output(d1_in4, False)
-sleep(2)
+def forwardFrontRight():
+    GPIO.output(d1_in1, False)
+    GPIO.output(d1_in2, False)
+    sleep(2)
+
+    GPIO.output(d1_in1, True)
+    GPIO.output(d1_in2, False)
+    sleep(2)
+
+    GPIO.output(d1_in1, False)
+    GPIO.output(d1_in2, False)
+    sleep(2)
+
+def backwardFrontRight():
+    GPIO.output(d1_in1, False)
+    GPIO.output(d1_in2, False)
+    sleep(2)
+
+    GPIO.output(d1_in1, False)
+    GPIO.output(d1_in2, True)
+    sleep(2)
+
+    GPIO.output(d1_in1, False)
+    GPIO.output(d1_in2, False)
+    sleep(2)
+
+def forwardFrontLeft():
+    GPIO.output(d1_in3, False)
+    GPIO.output(d1_in4, False)
+    sleep(2)
+
+    GPIO.output(d1_in3, False)
+    GPIO.output(d1_in4, True)
+    sleep(2)
+
+    GPIO.output(d1_in3, False)
+    GPIO.output(d1_in4, False)
+    sleep(2)
+
+def backwardFrontLeft():
+    GPIO.output(d1_in3, False)
+    GPIO.output(d1_in4, False)
+    sleep(2)
+
+    GPIO.output(d1_in3, True)
+    GPIO.output(d1_in4, False)
+    sleep(2)
+
+    GPIO.output(d1_in3, False)
+    GPIO.output(d1_in4, False)
+    sleep(2)
+
+
+def backwardBack():
+    GPIO.output(d2_in1, False)
+    GPIO.output(d2_in2, False)
+    GPIO.output(d2_in3, False)
+    GPIO.output(d2_in4, False)
+    sleep(2)
+
+    GPIO.output(d2_in1, False)
+    GPIO.output(d2_in2, True)
+    GPIO.output(d2_in3, True)
+    GPIO.output(d2_in4, False)
+    sleep(2)
+
+    GPIO.output(d2_in1, False)
+    GPIO.output(d2_in2, False)
+    GPIO.output(d2_in3, False)
+    GPIO.output(d2_in4, False)
+    sleep(2)
+
+
+def forwardBack():
+    GPIO.output(d2_in1, False)
+    GPIO.output(d2_in2, False)
+    GPIO.output(d2_in3, False)
+    GPIO.output(d2_in4, False)
+    sleep(2)
+
+    GPIO.output(d2_in1, True)
+    GPIO.output(d2_in2, False)
+    GPIO.output(d2_in3, False)
+    GPIO.output(d2_in4, True)
+    sleep(2)
+
+    GPIO.output(d2_in1, False)
+    GPIO.output(d2_in2, False)
+    GPIO.output(d2_in3, False)
+    GPIO.output(d2_in4, False)
+    sleep(2)
+
+
+def forwardBackRight():
+    GPIO.output(d2_in1, False)
+    GPIO.output(d2_in2, False)
+    sleep(2)
+
+    GPIO.output(d2_in1, True)
+    GPIO.output(d2_in2, False)
+    sleep(2)
+
+    GPIO.output(d2_in1, False)
+    GPIO.output(d2_in2, False)
+    sleep(2)
+
+
+def backwardBackRight():
+    GPIO.output(d2_in1, False)
+    GPIO.output(d2_in2, False)
+    sleep(2)
+
+    GPIO.output(d2_in1, False)
+    GPIO.output(d2_in2, True)
+    sleep(2)
+
+    GPIO.output(d2_in1, False)
+    GPIO.output(d2_in2, False)
+    sleep(2)
+
+
+def forwardBackLeft():
+    GPIO.output(d2_in3, False)
+    GPIO.output(d2_in4, False)
+    sleep(2)
+
+    GPIO.output(d2_in3, False)
+    GPIO.output(d2_in4, True)
+    sleep(2)
+
+    GPIO.output(d2_in3, False)
+    GPIO.output(d2_in4, False)
+    sleep(2)
+
+
+def backwardBackLeft():
+    GPIO.output(d2_in3, False)
+    GPIO.output(d2_in4, False)
+    sleep(2)
+
+    GPIO.output(d2_in3, True)
+    GPIO.output(d2_in4, False)
+    sleep(2)
+
+    GPIO.output(d2_in3, False)
+    GPIO.output(d2_in4, False)
+    sleep(2)
+
+clean()
+
+intializeGPIO()
+
+forwardFrontLeft()
+forwardFrontRight()
+forwardFront()
+
+backwardFrontLeft()
+backwardFrontRight()
+backwardFront()
+
+# Work on this!
+# forwardBackLeft()
+# forwardBackRight()
+# forwardBack()
+
+# backwardBackLeft()
+# backwardBackRight()
+# backwardBack()
 
 clean()

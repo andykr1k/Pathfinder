@@ -84,21 +84,3 @@ image_path = 'mac/assets/redbox.png'
 target_color = (220, 0, 40)  # Target color in RGB
 
 find_and_draw_boundary(image_path, target_color)
-
-# Equation to use for distance to object
-
-# Parameters(All in mm unless stated otherwise)
-
-## focal_length: Raspberry Pi Camera V2
-## sensor_height: Raspberry Pi Camera V2
-## sensor_width: Raspberry Pi Camera V2
-## object_height: Obstacle Height
-## object_width: Obstacle Width
-## object_height_pixels: Obstacle Height in pixels
-## object_width_pixels: Obstacle Width in pixels
-## image_height: Resolution of Frame
-## image_width: Resolution of Frame
-
-# distance = (focal_length * object_height * image_height) / (object_height_pixels * sensor_height)
-
-# distance = (focal_length * object_width * image_width) / (object_width_pixels * sensor_width)
