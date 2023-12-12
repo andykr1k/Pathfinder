@@ -5,12 +5,16 @@ from pick import pick
 def main():
     # TestAlgos()
 
-    algorithms = ["DFS", "BFS"]
-    title = 'Which algorithm would you like to use: '
-    option, index = pick(algorithms, title)
+    # algorithms = ["DFS", "BFS"]
+    # title = 'Which algorithm would you like to use: '
+    # option, index = pick(algorithms, title)
 
-    print("Selected algo: " + algorithms[index])
+    # print("Selected algo: " + algorithms[index])
 
+    # Test - Object Detection - See Objects
+    # Test - Movement Generator - Move to Objects
+    # Test - Decision Maker - Move around objects
+    # Test - Target Function - Move to Target Node
     return
 
 if __name__ == '__main__':
