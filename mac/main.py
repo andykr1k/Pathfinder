@@ -1,77 +1,82 @@
-import cv2
-import numpy as np
+from Test import TestAlgos
+from Functions import DetectObjects, GenerateDistance, GenerateMovements, DriveToObject, DriveToRoot
+from pick import pick
 
+def main():
+    # TestAlgos()
 
-def calculate_distance(image_path, left_point, right_point):
-    # Read the image
-    image = cv2.imread(image_path)
+    algorithms = ["DFS", "BFS"]
+    title = 'Which algorithm would you like to use: '
+    option, index = pick(algorithms, title)
 
-    # Assume you know the camera's focal length in pixels
-    # For example, let's say the focal length is 1000 pixels
-    focal_length_pixels = 1000.0
+    print("Selected algo: " + algorithms[index])
 
-    # Assume you know the width of the sensor in millimeters
-    # For example, let's say the sensor width is 10 mm
-    sensor_width_mm = 10.0
+    return
 
-    # Calculate the field of view (FOV) in radians
-    fov_radians = 2 * np.arctan((sensor_width_mm / 2) / focal_length_pixels)
+if __name__ == '__main__':
+    main()
 
-    # Calculate the distance between the left and right points in pixels
-    pixel_distance = abs(right_point[0] - left_point[0])
+# Routine
 
-    # Calculate the estimated distance to the dots in millimeters
-    distance_mm = (focal_length_pixels * sensor_width_mm) / \
-        (2 * pixel_distance * np.tan(fov_radians / 2))
+# 1) Place pathfinder at start of maze
+# 2) Choose search algorithm
+# 3) Press "Start"
+# 4) Complete Maze
+# 5) Restart from 2
 
-    return distance_mm
+# Main Loop
 
-def find_and_draw_boundary(image_path, target_color):
-    # Read the image
-    image = cv2.imread(image_path)
+# 1) Create tree with root node as starting position as well as a stack with recently visited node
+# 2) Look for target if found add paths to tree with generated movements to target and drive to target
+# 3) Look for obstacles if founde add paths to tree with generated movements
+# 4) Drive to next node depending on search algo
+# 5) Repeat from 2
+# 6) Drive back to root using generated movements
+# 7) Restart
 
-    # Convert the image from BGR to RGB color space
-    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+# Expanded Loop
 
-    # Define the lower and upper bounds for the target color in HSV
-    lower_bound = np.array(
-        [target_color[0] - 28, target_color[1] - 28, target_color[2] - 28])
-    upper_bound = np.array(
-        [target_color[0] + 28, target_color[1] + 28, target_color[2] + 28])
+# 1) Create tree with root node as starting position
 
-    # Create a mask using the inRange function
-    mask = cv2.inRange(image_rgb, lower_bound, upper_bound)
+# Create root
+# Create tree
 
-    # Find contours in the mask
-    contours, _ = cv2.findContours(
-        mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+# 2) Look for target if found add paths to tree with generated movements to target and drive to target
 
-    largest_contour = max(contours, key=cv2.contourArea)
+# Open camera
+# Detect target
+# Generate distance to target
+# Use distance to generate movements to target
+# Add path to tree with generated movements and distance marked as target node
+# Using target node movements drive to target node
+# Add current node to stack
+# Set current node to target node
 
-    # Draw a red boundary around the largest box
-    x, y, w, h = cv2.boundingRect(largest_contour)
-    cv2.rectangle(image, (x, y), (x + w, y + h), (0, 0, 255), 2)
+# 3) Look for obstacles if found add paths to tree with generated movements
 
-    # Calculate the midpoints of the left and right edges
-    left_midpoint = (x, y + h // 2)
-    right_midpoint = (x + w, y + h // 2)
+# Open camera
+# Detect obstacles
+# Generate distance to obstacles
+# Use distance to generate movements to obstacles
+# Add path to tree with generated movements and distance marked as obstacle node
 
-    # Draw dots on the midpoints
-    # Blue dot for left edge
-    cv2.circle(image, left_midpoint, 5, (255, 0, 0), -1)
-    # Green dot for right edge
-    cv2.circle(image, right_midpoint, 5, (0, 255, 0), -1)
+# 4) Drive to next node depending on search algo
 
-    distance = calculate_distance(image_path, left_midpoint, right_midpoint)
-    print(f"Estimated distance between dots: {distance:.2f} cm")
+# Select next obstacle node to explore using said search algo
+# Drive to next obstacle node
+# Add current node to stack
+# Set current position to next node
 
-    # Display the result
-    cv2.imshow('Result', image)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+# 5) Repeat from 2
 
-# Example usage
-image_path = 'assets/box.jpeg'
-target_color = (200, 160, 120)  # Target color in RGB
+# Loop will be broken once target is found
 
-find_and_draw_boundary(image_path, target_color)
+# 6) Drive back to root using generated movements
+
+# Pop Stack
+# Use backward movement
+# Repeat until start node is reached
+
+# 7) Restart
+
+# Back to search algorithm selection
