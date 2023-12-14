@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from motor import *
+from time import sleep
 
 def calculate_distances(left_midpoint, right_midpoint, frame):
     focal_length = 3.04
@@ -26,41 +27,44 @@ def drive_towards_largest_box(largest_contours, frame, car_offset, distance_left
     # Get the largest box
     largest_box_contour = largest_contours[0]
     x, y, w, h = cv2.boundingRect(largest_box_contour)
-    print("Largest Box X:" + str(x))
-    print("Largest Box Y:" + str(y))
+    area = cv2.contourArea(largest_box_contour)
+    print("Largest Box Midpoint:" + str(x + w // 2 - frame.shape[1] // 2))
+    print("Area of Box:" + str(area))
     # Check if the box is centered horizontally
-    center_threshold = 10  # Adjust as needed
-    if abs(x + w // 2 - frame.shape[1] // 2) > center_threshold:
-        while abs(x + w // 2 - frame.shape[1] // 2) > center_threshold:
-            if x + w // 2 - frame.shape[1] // 2 > 0:
-                driveLeft()
-            else:
-                driveRight()
+    center_threshold = 25  # Adjust as needed
+    norm_x = x + w // 2 - frame.shape[1] // 2
+    if abs(norm_x) > center_threshold:
+        if norm_x > center_threshold:
+            print("Driving Left")
+            driveLeft(abs(norm_x))
+        elif norm_x < -1*center_threshold:
+            print("Driving Right")
+            driveRight(abs(norm_x))
         TurnOffPins()
         print(f"Adjusting to center.")
     else:
-        driveForward()
-        print(
-            f"Driving towards the largest box.")
-
+        driveForward(area)
+        print(f"Driving towards the largest box.")
+    return
 
 def find_and_draw_boundary(target_color):
-    # Open a video capture object (0 is usually the default webcam)
     cap = cv2.VideoCapture(0)
-    
+    frame_counter = 0
     start = input("Start or Test?")
-
-    while start == "Start":
+    
+    while start == "s":
         # Read a frame from the webcam
         ret, frame = cap.read()
+        car_offset = 50
 
         # Flip the frame vertically
         frame = cv2.flip(frame, 0)
-
+        frame_counter+=1
+        
         # Convert the frame from BGR to RGB color space
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-        # Define the lower and upper bounds for the target color in HSV
+        # Define the lower and upper bounds for the target color in RGB
         padding = 10
         lower_bound = np.array(
             [target_color[0] - padding*4, target_color[1] - padding*2, target_color[2] - padding*2])
@@ -74,25 +78,14 @@ def find_and_draw_boundary(target_color):
         contours, _ = cv2.findContours(
             mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         
-        # largest_contours = []
+        largest_contours = []
 
-        # for contour in contours:
-        #     contour_area = cv2.contourArea(contour)
-        #     if contour_area > 500:
-        #         largest_contours.append(contour)
-        #         max_contour_area = contour_area
+        for contour in contours:
+            contour_area = cv2.contourArea(contour)
+            if contour_area > 500:
+                largest_contours.append(contour)
 
-        # Calculate areas of contours
-        areas = [cv2.contourArea(contour) for contour in contours]
-
-        # Combine contours and areas into a list of tuples (contour, area)
-        contours_with_areas = list(zip(contours, areas))
-
-        # Sort the list of contours based on areas in descending order (largest to smallest)
-        sorted_contours = sorted(contours_with_areas, key=lambda x: x[1], reverse=True)
-
-        # Extract sorted contours without areas
-        largest_contours = [contour for contour, _ in sorted_contours]
+        largest_contours = sorted(largest_contours, key=lambda x: cv2.contourArea(x), reverse=True)
 
         for contour in largest_contours:
 
@@ -100,30 +93,29 @@ def find_and_draw_boundary(target_color):
             x, y, w, h = cv2.boundingRect(contour)
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
-            car_offset = 50
-
             # Calculate the midpoints of the left and right edges
             left_midpoint = (x - car_offset, y + h // 2)
             right_midpoint = (x + w + car_offset, y + h // 2)
-
+            midpoint = (x + w // 2, y + h // 2)
             # Draw dots on the midpoints
             # Blue dot for left edge
             cv2.circle(frame, left_midpoint, 5, (255, 0, 0), -1)
             # Green dot for right edge
             cv2.circle(frame, right_midpoint, 5, (0, 255, 0), -1)
-            
+            # Purple for for center 
+            cv2.circle(frame, midpoint, 5, (150, 0, 150), -1)
+
             # Calculate distances from camera to dots using similar triangles
             distance_left_mm, distance_right_mm = calculate_distances(
                 left_midpoint, right_midpoint, frame)
 
-            title = f'Box {largest_contours.index(contour) + 1} - Left: {distance_left_mm:.2f} mm, Right: {distance_right_mm:.2f} mm'
+            # title = f'Box {largest_contours.index(contour) + 1} - Left: {distance_left_mm:.2f} mm, Right: {distance_right_mm:.2f} mm'
+            title = f'Box'
             title_position = (x + w // 2, y - 10)  # Adjust the vertical offset as needed
             font = cv2.FONT_HERSHEY_SIMPLEX
             font_scale = 0.5
             font_thickness = 1
             cv2.putText(frame, title, title_position, font, font_scale, (0, 255, 0), font_thickness)
-
-            drive_towards_largest_box(largest_contours, frame, car_offset, distance_left_mm, distance_right_mm)
 
             # Assuming a fixed camera orientation and no tilt or rotation
             # Angle from camera to blue dot (left midpoint)
@@ -158,16 +150,21 @@ def find_and_draw_boundary(target_color):
         # Display the result
         cv2.imshow('Result', frame)
 
+        if frame_counter % 10 == 0:
+            drive_towards_largest_box(largest_contours, frame, car_offset, distance_left_mm, distance_right_mm)
+
         # Break the loop if 'q' is pressed
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord('q'):
             break
+
+        sleep(0.25)
 
     TurnOffPins()
     clean()
-    # Release the video capture object and close all windows
     cap.release()
     cv2.destroyAllWindows()
 
-# Example usage
+# Usage
 target_color = (90, 0, 20)  # Target color in RGB
 find_and_draw_boundary(target_color)

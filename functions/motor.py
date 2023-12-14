@@ -70,26 +70,34 @@ def clean():
     GPIO.output(d2_en1b, False)
     GPIO.cleanup()
 
-def driveForward():
+def driveForward(area):
     GPIO.output(d2_in2, True)
     GPIO.output(d2_in3, True)
     GPIO.output(d1_in1, True)
     GPIO.output(d1_in4, True)
+    sleep(area/2000)
+    TurnOffPins()
 
 def driveBackward():
     GPIO.output(d2_in1, True)
     GPIO.output(d2_in4, True)
     GPIO.output(d1_in2, True)
     GPIO.output(d1_in3, True)
+    sleep(1)
+    TurnOffPins()
 
-def driveLeft():
+def driveLeft(x):
     GPIO.output(d2_in1, True)
     GPIO.output(d2_in3, True)
     GPIO.output(d1_in1, True)
     GPIO.output(d1_in3, True)
+    sleep(x/150)
+    TurnOffPins()
 
-def driveRight():
+def driveRight(x):
     GPIO.output(d2_in2, True)
     GPIO.output(d2_in4, True)
     GPIO.output(d1_in2, True)
     GPIO.output(d1_in4, True)
+    sleep(x/150)
+    TurnOffPins()
