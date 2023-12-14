@@ -1,7 +1,17 @@
 import cv2
 import numpy as np
 from time import sleep
-from functions.motor import *
+from functions.motor import *    
+
+def celebrate():
+    print("Found Target! Celebration Mode!!!")
+    driveRight(100)
+    driveLeft(100)
+    driveRight(100)
+    driveLeft(100)
+    driveBackward(100)
+    driveForward(100)
+    return
 
 def drive_towards_target(target_contour, frame, car_offset):
     if not target_contour:
@@ -25,8 +35,11 @@ def drive_towards_target(target_contour, frame, car_offset):
         TurnOffPins()
         print(f"Adjusting to center.")
     else:
-        driveForward(area)
-        print(f"Driving towards the target.")
+        if area > 35000:
+            celebrate()
+        else:
+            driveForward(area)
+            print(f"Driving towards the target.")
     return
 
 def drive_around_box():
@@ -35,6 +48,7 @@ def drive_around_box():
     driveRight(175)
     driveForward(5000)
     driveLeft(175)
+    return
 
 def drive_towards_largest_box(largest_contours, frame, car_offset):
     if not largest_contours:
@@ -62,7 +76,7 @@ def drive_towards_largest_box(largest_contours, frame, car_offset):
         print(f"Adjusting to center.")
     else:
         if area > 35000:
-            drive_around_box()
+            drive_around_box(norm_x)
         else:
             driveForward(area)
 
@@ -178,13 +192,20 @@ def find_and_draw_boundary():
         cv2.imshow('Result', frame)
 
         if frame_counter % 20 == 0:
-            if largest_contours_target == []:
                 if largest_contours != []:
-                    drive_towards_largest_box(largest_contours, frame, car_offset)
+                    if largest_contours_target != []:
+                        if cv2.contourArea(largest_contours[0]) > cv2.contourArea(largest_contours_target[0]):
+                            drive_towards_largest_box(largest_contours, frame, car_offset)
+                        else:
+                            drive_towards_target(largest_contours_target, frame, car_offset)
+                    else:
+                        drive_towards_largest_box(
+                            largest_contours, frame, car_offset)
                 else:
-                    print("Field is Empty!")
-            else:
-                drive_towards_target(largest_contours_target, frame, car_offset)
+                    if largest_contours_target != []:
+                        drive_towards_target(largest_contours_target, frame, car_offset)
+                    else:
+                        print("Field is Empty!")
 
         # Break the loop if 'q' is pressed
         key = cv2.waitKey(1) & 0xFF
