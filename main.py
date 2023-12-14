@@ -1,5 +1,5 @@
 from tests.Test import TestAlgos
-
+from functions.camera import find_and_draw_boundary
 def main():
     # TestAlgos()
 
@@ -7,10 +7,11 @@ def main():
     # title = 'Which algorithm would you like to use: '
     # option, index = pick(algorithms, title)
 
-    # print("Selected algo: " + algorithms[index])
+    # print("Selected algorithm: " + algorithms[index])
 
     # Test - Object Detection - See Objects - Check
     # Test - Movement Generator - Move to Objects
+    find_and_draw_boundary()
     # Test - Decision Maker - Move around objects
     # Test - Target Function - Move to Target Node
     return

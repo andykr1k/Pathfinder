@@ -162,6 +162,3 @@ def find_and_draw_boundary():
     clean()
     cap.release()
     cv2.destroyAllWindows()
-
-# Usage
-find_and_draw_boundary()
