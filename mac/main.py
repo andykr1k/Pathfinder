@@ -11,7 +11,7 @@ def main():
 
     # print("Selected algo: " + algorithms[index])
 
-    # Test - Object Detection - See Objects
+    # Test - Object Detection - See Objects - Check
     # Test - Movement Generator - Move to Objects
     # Test - Decision Maker - Move around objects
     # Test - Target Function - Move to Target Node
