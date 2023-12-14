@@ -26,7 +26,8 @@ def drive_towards_largest_box(largest_contours, frame, car_offset, distance_left
     # Get the largest box
     largest_box_contour = largest_contours[0]
     x, y, w, h = cv2.boundingRect(largest_box_contour)
-
+    print("Largest Box X:" + str(x))
+    print("Largest Box Y:" + str(y))
     # Check if the box is centered horizontally
     center_threshold = 10  # Adjust as needed
     if abs(x + w // 2 - frame.shape[1] // 2) > center_threshold:
@@ -158,7 +159,7 @@ def find_and_draw_boundary(target_color):
         # Break the loop if 'q' is pressed
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-        
+
     motor.TurnOffPins()
     motor.clean()
     # Release the video capture object and close all windows
