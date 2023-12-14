@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from pi import motor
+import pi
 
 def calculate_distances(left_midpoint, right_midpoint, frame):
     focal_length = 3.04
@@ -33,13 +33,13 @@ def drive_towards_largest_box(largest_contours, frame, car_offset, distance_left
     if abs(x + w // 2 - frame.shape[1] // 2) > center_threshold:
         while abs(x + w // 2 - frame.shape[1] // 2) > center_threshold:
             if x + w // 2 - frame.shape[1] // 2 > 0:
-                motor.driveLeft()
+                pi.driveLeft()
             else:
-                motor.driveRight()
-        motor.TurnOffPins()
+                pi.driveRight()
+        pi.TurnOffPins()
         print(f"Adjusting to center.")
     else:
-        motor.driveForward()
+        pi.driveForward()
         print(
             f"Driving towards the largest box.")
 
@@ -160,8 +160,8 @@ def find_and_draw_boundary(target_color):
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-    motor.TurnOffPins()
-    motor.clean()
+    pi.TurnOffPins()
+    pi.clean()
     # Release the video capture object and close all windows
     cap.release()
     cv2.destroyAllWindows()
