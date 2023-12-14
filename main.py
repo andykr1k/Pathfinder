@@ -13,7 +13,6 @@ def main():
     # Test - Movement Generator - Move to Objects
     # Test - Decision Maker - Move around objects
     # Test - Target Function - Move to Target Node
-    Hello()
     return
 
 if __name__ == '__main__':
