@@ -17,6 +17,31 @@ def calculate_distances(left_midpoint, right_midpoint, frame):
 
     return distance_left_mm, distance_right_mm
 
+def drive_towards_largest_box(target_contour, frame, car_offset, distance_left_mm, distance_right_mm):
+    if not target_contour:
+        print("No target found.")
+        return
+
+    x, y, w, h = cv2.boundingRect(target_contour)
+    area = cv2.contourArea(target_contour)
+    print("Target Midpoint:" + str(x + w // 2 - frame.shape[1] // 2))
+    print("Area of Target:" + str(area))
+    # Check if the box is centered horizontally
+    center_threshold = 25  # Adjust as needed
+    norm_x = x + w // 2 - frame.shape[1] // 2
+    if abs(norm_x) > center_threshold:
+        if norm_x > center_threshold:
+            print("Driving Left")
+            driveLeft(abs(norm_x))
+        elif norm_x < -1*center_threshold:
+            print("Driving Right")
+            driveRight(abs(norm_x))
+        TurnOffPins()
+        print(f"Adjusting to center.")
+    else:
+        driveForward(area)
+        print(f"Driving towards the target.")
+    return
 
 def drive_towards_largest_box(largest_contours, frame, car_offset, distance_left_mm, distance_right_mm):
     if not largest_contours:
@@ -65,16 +90,23 @@ def find_and_draw_boundary():
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
         # Define the lower and upper bounds for the target color in RGB
-        padding = 10
-        lower_bound = np.array([100, 0, 0])
-        upper_bound = np.array([255, 50, 50])
+        lower_bound_objects = np.array([100, 0, 0])
+        upper_bound_objects = np.array([255, 50, 50])
+        lower_bound_target = np.array([100, 0, 0])
+        upper_bound_target = np.array([255, 50, 50])
 
         # Create a mask using the inRange function
-        mask = cv2.inRange(frame_rgb, lower_bound, upper_bound)
+        mask_objects = cv2.inRange(
+            frame_rgb, lower_bound_objects, upper_bound_objects)
+        mask_target = cv2.inRange(
+            frame_rgb, lower_bound_target, upper_bound_target)
 
         # Find contours in the mask
         contours, _ = cv2.findContours(
-            mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            mask_objects, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        
+        contours_target, _ = cv2.findContours(
+            mask_objects, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         
         largest_contours = []
 
@@ -84,6 +116,16 @@ def find_and_draw_boundary():
                 largest_contours.append(contour)
 
         largest_contours = sorted(largest_contours, key=lambda x: cv2.contourArea(x), reverse=True)
+
+        largest_contours_target = []
+
+        for contour in contours_target:
+            contour_area = cv2.contourArea(contour)
+            if contour_area > 500:
+                largest_contours.append(contour)
+
+        largest_contours_target = sorted(
+            largest_contours, key=lambda x: cv2.contourArea(x), reverse=True)
 
         for contour in largest_contours:
 
@@ -108,48 +150,42 @@ def find_and_draw_boundary():
                 left_midpoint, right_midpoint, frame)
 
             # title = f'Box {largest_contours.index(contour) + 1} - Left: {distance_left_mm:.2f} mm, Right: {distance_right_mm:.2f} mm'
-            title = f'Box'
+            title = f'Obstacle'
             title_position = (x + w // 2, y - 10)  # Adjust the vertical offset as needed
             font = cv2.FONT_HERSHEY_SIMPLEX
             font_scale = 0.5
             font_thickness = 1
             cv2.putText(frame, title, title_position, font, font_scale, (0, 255, 0), font_thickness)
 
-            # Assuming a fixed camera orientation and no tilt or rotation
-            # Angle from camera to blue dot (left midpoint)
-            # angle_blue = np.arctan(
-            #     (left_midpoint[0] - frame.shape[1] / 2) / focal_length)
-            # angle_blue_deg = np.degrees(angle_blue)
+        if largest_contours_target[0] != None:
 
-            # Angle from camera to green dot (right midpoint)
-            # angle_green = np.arctan(
-            #     (right_midpoint[0] - frame.shape[1] / 2) / focal_length)
-            # angle_green_deg = np.degrees(angle_green)
+            # Draw a red boundary around the largest box
+            x, y, w, h = cv2.boundingRect(largest_contours_target[0])
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
-            # Calculate distances from camera to dots using similar triangles
-            # Correcting the distance calculation for blue and green dots
-            # distance_blue_mm = (sensor_width * focal_length) / \
-            #     (2 * np.tan(angle_blue / 2))
-            # distance_green_mm = (sensor_width * focal_length) / \
-            #     (2 * np.tan(angle_green / 2))
+            # Calculate the midpoints of the left and right edges
+            midpoint_target = (x + w // 2, y + h // 2)
+            # Draw dots on the midpoints
+            # Purple for for center
+            cv2.circle(frame, midpoint_target, 5, (150, 0, 150), -1)
 
-            # Draw the angles as text on the frame
-            # scale = 0.5
-            # text_position_blue = (200, 40)
-            # text_position_green = (200, 60)
-            # font = cv2.FONT_HERSHEY_SIMPLEX
-
-            # # Put the angle text and distance text at the specified positions
-            # cv2.putText(frame, f'Angle to Blue: {angle_blue_deg:.2f} degrees, Distance: {distance_blue_mm:.2f} mm',
-            #             text_position_blue, font, scale, (0, 0, 0), 1)
-            # cv2.putText(frame, f'Angle to Green: {angle_green_deg:.2f} degrees, Distance: {distance_green_mm:.2f} mm',
-            #             text_position_green, font, scale, (0, 0, 0), 1)
-
+            title = f'Target'
+            # Adjust the vertical offset as needed
+            title_position = (x + w // 2, y - 10)
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            font_scale = 0.5
+            font_thickness = 1
+            cv2.putText(frame, title, title_position, font,
+                        font_scale, (0, 255, 0), font_thickness)
+            
         # Display the result
         cv2.imshow('Result', frame)
 
-        # if frame_counter % 10 == 0:
-        #     drive_towards_largest_box(largest_contours, frame, car_offset, distance_left_mm, distance_right_mm)
+        if frame_counter % 10 == 0:
+            if largest_contours_target[0] == None:
+                drive_towards_largest_box(largest_contours, frame, car_offset, distance_left_mm, distance_right_mm)
+            else:
+                drive_towards_target(largest_contours_target[0], frame)
 
         # Break the loop if 'q' is pressed
         key = cv2.waitKey(1) & 0xFF
