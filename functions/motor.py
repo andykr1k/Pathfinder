@@ -42,10 +42,10 @@ GPIO.setup(d2_in4, GPIO.OUT)
 # p2a = GPIO.PWM(d2_en1a, 1000)
 # p2b = GPIO.PWM(d2_en1b, 1000)
 
-# p1a.ChangeDutyCycle(25)
-# p1b.ChangeDutyCycle(25)
-# p2a.ChangeDutyCycle(25)
-# p1b.ChangeDutyCycle(25)
+# p1a.start(25)
+# p1b.start(25)
+# p2a.start(25)
+# p1b.start(25)
 
 GPIO.output(d1_en1a, True)
 GPIO.output(d1_en1b, True)
@@ -62,6 +62,7 @@ def TurnOffPins():
     GPIO.output(d2_in3, False)
     GPIO.output(d2_in4, False)
     sleep(1)
+    return
 
 def clean():
     GPIO.output(d1_en1a, False)
@@ -69,35 +70,54 @@ def clean():
     GPIO.output(d2_en1a, False)
     GPIO.output(d2_en1b, False)
     GPIO.cleanup()
+    return
 
-def driveForward(area):
+def celebrateRight():
+    GPIO.output(d1_in3, True)
+    GPIO.output(d1_in1, True)
+    sleep(5)
+    TurnOffPins()
+    return
+
+def adjustStraight():
+    GPIO.output(d1_in3, True)
+    GPIO.output(d1_in1, True)
+    sleep(0.2)
+    TurnOffPins()
+    return
+
+def driveForward():
     GPIO.output(d2_in2, True)
     GPIO.output(d2_in3, True)
     GPIO.output(d1_in1, True)
     GPIO.output(d1_in4, True)
-    sleep((1/area)*10000)
+    sleep(1)
     TurnOffPins()
+    return
 
-def driveBackward():
+def driveBackward(area):
     GPIO.output(d2_in1, True)
     GPIO.output(d2_in4, True)
     GPIO.output(d1_in2, True)
     GPIO.output(d1_in3, True)
-    sleep(1)
+    sleep((1/area)*10000)
     TurnOffPins()
+    return
 
 def driveLeft(x):
     GPIO.output(d2_in1, True)
     GPIO.output(d2_in3, True)
     GPIO.output(d1_in1, True)
     GPIO.output(d1_in3, True)
-    sleep(x/250)
+    sleep(x/200)
     TurnOffPins()
+    return
 
 def driveRight(x):
     GPIO.output(d2_in2, True)
     GPIO.output(d2_in4, True)
     GPIO.output(d1_in2, True)
     GPIO.output(d1_in4, True)
-    sleep(x/250)
+    sleep(x/200)
     TurnOffPins()
+    return

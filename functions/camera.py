@@ -9,8 +9,7 @@ def celebrate():
     driveLeft(100)
     driveRight(100)
     driveLeft(100)
-    driveBackward(100)
-    driveForward(100)
+    celebrateRight()
     return
 
 def drive_towards_target(target_contour, frame, car_offset):
@@ -23,8 +22,11 @@ def drive_towards_target(target_contour, frame, car_offset):
     print("Target Midpoint:" + str(x + w // 2 - frame.shape[1] // 2))
     print("Area of Target:" + str(area))
     # Check if the box is centered horizontally
-    center_threshold = 25  # Adjust as needed
+    center_threshold = 40  # Adjust as needed
     norm_x = x + w // 2 - frame.shape[1] // 2
+    if area > 35000:
+        celebrate()
+        return
     if abs(norm_x) > center_threshold:
         if norm_x > center_threshold:
             print("Driving Left")
@@ -35,19 +37,30 @@ def drive_towards_target(target_contour, frame, car_offset):
         TurnOffPins()
         print(f"Adjusting to center.")
     else:
-        if area > 35000:
-            celebrate()
-        else:
-            driveForward(area)
-            print(f"Driving towards the target.")
+        driveForward()
+        print(f"Driving towards the target.")
     return
 
-def drive_around_box():
+def drive_around_box(norm_x):
     # Depends on search algo
+    center_threshold = 40 
     print("Driving Around Largest Box")
-    driveRight(175)
-    driveForward(5000)
-    driveLeft(175)
+    if norm_x > center_threshold:
+        driveRight(350)
+        driveForward()
+        driveForward()
+        driveLeft(350)
+    elif norm_x < -1*center_threshold:
+        driveLeft(350)
+        driveForward()
+        driveForward()
+        driveRight(350)
+    else:
+        driveRight(350)
+        driveForward()
+        driveForward()
+        driveLeft(350)
+    TurnOffPins()
     return
 
 def drive_towards_largest_box(largest_contours, frame, car_offset):
@@ -63,8 +76,11 @@ def drive_towards_largest_box(largest_contours, frame, car_offset):
     print("Largest Box Midpoint:" + str(x + w // 2 - frame.shape[1] // 2))
     print("Area of Box:" + str(area))
     # Check if the box is centered horizontally
-    center_threshold = 25  # Adjust as needed
+    center_threshold = 40  # Adjust as needed
     norm_x = x + w // 2 - frame.shape[1] // 2
+    if area > 60000:
+        drive_around_box(norm_x)
+        return
     if abs(norm_x) > center_threshold:
         if norm_x > center_threshold:
             print("Driving Left")
@@ -75,11 +91,7 @@ def drive_towards_largest_box(largest_contours, frame, car_offset):
         TurnOffPins()
         print(f"Adjusting to center.")
     else:
-        if area > 35000:
-            drive_around_box(norm_x)
-        else:
-            driveForward(area)
-
+        driveForward()
         print(f"Driving towards the largest box.")
     return
 
@@ -104,7 +116,7 @@ def find_and_draw_boundary():
         lower_bound_objects = np.array([75, 0, 0])
         upper_bound_objects = np.array([255, 50, 50])
         lower_bound_target = np.array([75, 75, 30])
-        upper_bound_target = np.array([125, 125, 70])
+        upper_bound_target = np.array([125, 125, 60])
 
         # Create a mask using the inRange function
         mask_objects = cv2.inRange(
@@ -135,7 +147,7 @@ def find_and_draw_boundary():
         for contour in contours_target:
             contour_area = cv2.contourArea(contour)
             x,y,w,h = cv2.boundingRect(contour)
-            if contour_area > 500 and h > 75:
+            if contour_area > 500 and h > 50:
                 largest_contours_target.append(contour)
 
         largest_contours_target = sorted(
@@ -191,7 +203,7 @@ def find_and_draw_boundary():
         # Display the result
         cv2.imshow('Result', frame)
 
-        if frame_counter % 20 == 0:
+        if frame_counter % 15 == 0:
                 if largest_contours != []:
                     if largest_contours_target != []:
                         if cv2.contourArea(largest_contours[0]) > cv2.contourArea(largest_contours_target[0]):
