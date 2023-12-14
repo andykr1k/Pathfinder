@@ -47,10 +47,10 @@ def drive_towards_largest_box(largest_contours, frame, car_offset, distance_left
         print(f"Driving towards the largest box.")
     return
 
-def find_and_draw_boundary(target_color):
+def find_and_draw_boundary():
     cap = cv2.VideoCapture(0)
     frame_counter = 0
-    start = input("Start or Test?")
+    start = input('Start or Quit?\n')
     
     while start == "s":
         # Read a frame from the webcam
@@ -60,16 +60,14 @@ def find_and_draw_boundary(target_color):
         # Flip the frame vertically
         frame = cv2.flip(frame, 0)
         frame_counter+=1
-        
+
         # Convert the frame from BGR to RGB color space
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
         # Define the lower and upper bounds for the target color in RGB
         padding = 10
-        lower_bound = np.array(
-            [target_color[0] - padding*4, target_color[1] - padding*2, target_color[2] - padding*2])
-        upper_bound = np.array(
-            [target_color[0] + padding*10, target_color[1] + padding*2, target_color[2] + padding*2])
+        lower_bound = np.array([100, 0, 0])
+        upper_bound = np.array([255, 50, 50])
 
         # Create a mask using the inRange function
         mask = cv2.inRange(frame_rgb, lower_bound, upper_bound)
@@ -150,8 +148,8 @@ def find_and_draw_boundary(target_color):
         # Display the result
         cv2.imshow('Result', frame)
 
-        if frame_counter % 10 == 0:
-            drive_towards_largest_box(largest_contours, frame, car_offset, distance_left_mm, distance_right_mm)
+        # if frame_counter % 10 == 0:
+        #     drive_towards_largest_box(largest_contours, frame, car_offset, distance_left_mm, distance_right_mm)
 
         # Break the loop if 'q' is pressed
         key = cv2.waitKey(1) & 0xFF
@@ -166,5 +164,4 @@ def find_and_draw_boundary(target_color):
     cv2.destroyAllWindows()
 
 # Usage
-target_color = (90, 0, 20)  # Target color in RGB
-find_and_draw_boundary(target_color)
+find_and_draw_boundary()
