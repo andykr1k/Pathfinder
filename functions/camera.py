@@ -1,29 +1,15 @@
 import cv2
 import numpy as np
-from motor import *
 from time import sleep
+from functions.motor import *
 
-def calculate_distances(left_midpoint, right_midpoint, frame):
-    focal_length = 3.04
-    sensor_width = 3.67
-
-    # Calculate distances from camera to dots using similar triangles
-    distance_left_mm = (sensor_width * focal_length) / \
-        (2 * np.tan(np.arctan((left_midpoint[0] -
-         frame.shape[1] / 2) / focal_length) / 2))
-    distance_right_mm = (sensor_width * focal_length) / \
-        (2 * np.tan(np.arctan((right_midpoint[0] -
-         frame.shape[1] / 2) / focal_length) / 2))
-
-    return distance_left_mm, distance_right_mm
-
-def drive_towards_largest_box(target_contour, frame, car_offset, distance_left_mm, distance_right_mm):
+def drive_towards_target(target_contour, frame, car_offset):
     if not target_contour:
         print("No target found.")
         return
 
-    x, y, w, h = cv2.boundingRect(target_contour)
-    area = cv2.contourArea(target_contour)
+    x, y, w, h = cv2.boundingRect(target_contour[0])
+    area = cv2.contourArea(target_contour[0])
     print("Target Midpoint:" + str(x + w // 2 - frame.shape[1] // 2))
     print("Area of Target:" + str(area))
     # Check if the box is centered horizontally
@@ -43,7 +29,14 @@ def drive_towards_largest_box(target_contour, frame, car_offset, distance_left_m
         print(f"Driving towards the target.")
     return
 
-def drive_towards_largest_box(largest_contours, frame, car_offset, distance_left_mm, distance_right_mm):
+def drive_around_box():
+    # Depends on search algo
+    print("Driving Around Largest Box")
+    driveRight(175)
+    driveForward(5000)
+    driveLeft(175)
+
+def drive_towards_largest_box(largest_contours, frame, car_offset):
     if not largest_contours:
         # No largest box found, stop or take appropriate action
         print("No largest box found.")
@@ -68,7 +61,11 @@ def drive_towards_largest_box(largest_contours, frame, car_offset, distance_left
         TurnOffPins()
         print(f"Adjusting to center.")
     else:
-        driveForward(area)
+        if area > 35000:
+            drive_around_box()
+        else:
+            driveForward(area)
+
         print(f"Driving towards the largest box.")
     return
 
@@ -90,10 +87,10 @@ def find_and_draw_boundary():
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
         # Define the lower and upper bounds for the target color in RGB
-        lower_bound_objects = np.array([100, 0, 0])
+        lower_bound_objects = np.array([75, 0, 0])
         upper_bound_objects = np.array([255, 50, 50])
-        lower_bound_target = np.array([100, 0, 0])
-        upper_bound_target = np.array([255, 50, 50])
+        lower_bound_target = np.array([75, 75, 30])
+        upper_bound_target = np.array([125, 125, 70])
 
         # Create a mask using the inRange function
         mask_objects = cv2.inRange(
@@ -106,14 +103,16 @@ def find_and_draw_boundary():
             mask_objects, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         
         contours_target, _ = cv2.findContours(
-            mask_objects, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            mask_target, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         
         largest_contours = []
 
         for contour in contours:
             contour_area = cv2.contourArea(contour)
-            if contour_area > 500:
+            x,y,w,h = cv2.boundingRect(contour)
+            if contour_area > 500 and h > 50:
                 largest_contours.append(contour)
+                
 
         largest_contours = sorted(largest_contours, key=lambda x: cv2.contourArea(x), reverse=True)
 
@@ -121,11 +120,12 @@ def find_and_draw_boundary():
 
         for contour in contours_target:
             contour_area = cv2.contourArea(contour)
-            if contour_area > 500:
-                largest_contours.append(contour)
+            x,y,w,h = cv2.boundingRect(contour)
+            if contour_area > 500 and h > 75:
+                largest_contours_target.append(contour)
 
         largest_contours_target = sorted(
-            largest_contours, key=lambda x: cv2.contourArea(x), reverse=True)
+            largest_contours_target, key=lambda x: cv2.contourArea(x), reverse=True)
 
         for contour in largest_contours:
 
@@ -145,10 +145,6 @@ def find_and_draw_boundary():
             # Purple for for center 
             cv2.circle(frame, midpoint, 5, (150, 0, 150), -1)
 
-            # Calculate distances from camera to dots using similar triangles
-            distance_left_mm, distance_right_mm = calculate_distances(
-                left_midpoint, right_midpoint, frame)
-
             # title = f'Box {largest_contours.index(contour) + 1} - Left: {distance_left_mm:.2f} mm, Right: {distance_right_mm:.2f} mm'
             title = f'Obstacle'
             title_position = (x + w // 2, y - 10)  # Adjust the vertical offset as needed
@@ -157,7 +153,7 @@ def find_and_draw_boundary():
             font_thickness = 1
             cv2.putText(frame, title, title_position, font, font_scale, (0, 255, 0), font_thickness)
 
-        if largest_contours_target[0] != None:
+        if largest_contours_target != []:
 
             # Draw a red boundary around the largest box
             x, y, w, h = cv2.boundingRect(largest_contours_target[0])
@@ -181,11 +177,14 @@ def find_and_draw_boundary():
         # Display the result
         cv2.imshow('Result', frame)
 
-        if frame_counter % 10 == 0:
-            if largest_contours_target[0] == None:
-                drive_towards_largest_box(largest_contours, frame, car_offset, distance_left_mm, distance_right_mm)
+        if frame_counter % 20 == 0:
+            if largest_contours_target == []:
+                if largest_contours != []:
+                    drive_towards_largest_box(largest_contours, frame, car_offset)
+                else:
+                    print("Field is Empty!")
             else:
-                drive_towards_target(largest_contours_target[0], frame)
+                drive_towards_target(largest_contours_target, frame, car_offset)
 
         # Break the loop if 'q' is pressed
         key = cv2.waitKey(1) & 0xFF

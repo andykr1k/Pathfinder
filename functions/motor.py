@@ -75,7 +75,7 @@ def driveForward(area):
     GPIO.output(d2_in3, True)
     GPIO.output(d1_in1, True)
     GPIO.output(d1_in4, True)
-    sleep(area/2000)
+    sleep((1/area)*10000)
     TurnOffPins()
 
 def driveBackward():
@@ -91,7 +91,7 @@ def driveLeft(x):
     GPIO.output(d2_in3, True)
     GPIO.output(d1_in1, True)
     GPIO.output(d1_in3, True)
-    sleep(x/150)
+    sleep(x/250)
     TurnOffPins()
 
 def driveRight(x):
@@ -99,5 +99,5 @@ def driveRight(x):
     GPIO.output(d2_in4, True)
     GPIO.output(d1_in2, True)
     GPIO.output(d1_in4, True)
-    sleep(x/150)
+    sleep(x/250)
     TurnOffPins()
