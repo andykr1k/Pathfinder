@@ -78,7 +78,7 @@ def drive_towards_largest_box(largest_contours, frame, car_offset):
     # Check if the box is centered horizontally
     center_threshold = 40  # Adjust as needed
     norm_x = x + w // 2 - frame.shape[1] // 2
-    if area > 60000:
+    if area > 50000:
         drive_around_box(norm_x)
         return
     if abs(norm_x) > center_threshold:
@@ -172,7 +172,7 @@ def find_and_draw_boundary():
             cv2.circle(frame, midpoint, 5, (150, 0, 150), -1)
 
             # title = f'Box {largest_contours.index(contour) + 1} - Left: {distance_left_mm:.2f} mm, Right: {distance_right_mm:.2f} mm'
-            title = f'Obstacle {largest_contours.index(contour) + 1}'
+            title = f'Obstacle'
             title_position = (x + w // 2, y - 10)  # Adjust the vertical offset as needed
             font = cv2.FONT_HERSHEY_SIMPLEX
             font_scale = 0.5
