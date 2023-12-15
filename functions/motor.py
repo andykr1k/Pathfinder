@@ -86,30 +86,38 @@ def celebrateRight():
     TurnOffPins()
     return
 
-def adjustStraight():
+def adjustStraightLeft():
     GPIO.output(d1_in3, True)
     GPIO.output(d1_in1, True)
-    sleep(0.15)
+    sleep(0.05)
     TurnOffPins()
     return
 
-def driveForward():
+def adjustStraightRight():
+    GPIO.output(d1_in2, True)
+    GPIO.output(d1_in4, True)
+    sleep(0.05)
+    TurnOffPins()
+    return
+
+def driveForward(x):
     GPIO.output(d2_in2, True)
     GPIO.output(d2_in3, True)
     GPIO.output(d1_in1, True)
     GPIO.output(d1_in4, True)
-    sleep(1)
+    sleep(0.3)
     TurnOffPins()
-    adjustStraight()
+    adjustStraightLeft()
     return
 
-def driveBackward(area):
+def driveBackward(x):
     GPIO.output(d2_in1, True)
     GPIO.output(d2_in4, True)
     GPIO.output(d1_in2, True)
     GPIO.output(d1_in3, True)
-    sleep(1)
+    sleep(0.3)
     TurnOffPins()
+    adjustStraightRight()
     return
 
 def driveLeft(x):
@@ -117,8 +125,9 @@ def driveLeft(x):
     GPIO.output(d2_in3, True)
     GPIO.output(d1_in1, True)
     GPIO.output(d1_in3, True)
-    sleep(0.5)
+    sleep(0.25)
     TurnOffPins()
+    adjustStraightRight()
     return
 
 def driveRight(x):
@@ -126,6 +135,7 @@ def driveRight(x):
     GPIO.output(d2_in4, True)
     GPIO.output(d1_in2, True)
     GPIO.output(d1_in4, True)
-    sleep(0.5)
+    sleep(0.25)
     TurnOffPins()
+    adjustStraightLeft()
     return

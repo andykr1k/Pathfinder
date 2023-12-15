@@ -27,14 +27,14 @@ def drive_towards_target(target_contour, frame, car_offset):
     if abs(norm_x) > center_threshold:
         if norm_x > center_threshold:
             print("Driving Left")
-            driveLeft(abs(norm_x))
+            driveLeft(1)
         elif norm_x < -1*center_threshold:
             print("Driving Right")
-            driveRight(abs(norm_x))
+            driveRight(1)
         TurnOffPins()
         print(f"Adjusting to center.")
     else:
-        driveForward()
+        driveForward(1)
         print(f"Driving towards the target.")
     return
 
@@ -44,22 +44,34 @@ def drive_around_box(norm_x):
     print("Driving Around Largest Box")
     if norm_x > center_threshold:
         driveRight(1)
-        driveRight(1)
-        driveForward()
-        driveForward()
-
+        driveRight(2)
+        driveRight(3)
+        driveForward(1)
+        driveForward(2)
+        driveForward(3)
+        driveLeft(1)
+        driveLeft(2)
+        driveLeft(3)
     elif norm_x < -1*center_threshold:
-        driveLeft(350)
-        driveLeft(350)
-        driveForward()
-        driveForward()
-
+        driveLeft(1)
+        driveLeft(2)
+        driveLeft(3)
+        driveForward(1)
+        driveForward(2)
+        driveForward(3)
+        driveRight(1)
+        driveRight(2)
+        driveRight(3)
     else:
-        driveRight(350)
-        driveRight(350)
-        driveForward()
-        driveForward()
-
+        driveLeft(1)
+        driveLeft(2)
+        driveLeft(3)
+        driveForward(1)
+        driveForward(2)
+        driveForward(3)
+        driveRight(1)
+        driveRight(2)
+        driveRight(3)
     TurnOffPins()
     return
 
@@ -84,14 +96,14 @@ def drive_towards_largest_box(largest_contours, frame, car_offset):
     if abs(norm_x) > center_threshold:
         if norm_x > center_threshold:
             print("Driving Left")
-            driveLeft(abs(norm_x))
+            driveLeft(1)
         elif norm_x < -1*center_threshold:
             print("Driving Right")
-            driveRight(abs(norm_x))
+            driveRight(1)
         TurnOffPins()
         print(f"Adjusting to center.")
     else:
-        driveForward()
+        driveForward(1)
         print(f"Driving towards the largest box.")
     return
 
@@ -203,7 +215,7 @@ def find_and_draw_boundary():
         # Display the result
         cv2.imshow('Result', frame)
 
-        if frame_counter % 10 == 0:
+        if frame_counter % 12 == 0:
                 if largest_contours != []:
                     if largest_contours_target != []:
                         if cv2.contourArea(largest_contours[0])/2 > cv2.contourArea(largest_contours_target[0]):
@@ -215,10 +227,11 @@ def find_and_draw_boundary():
                             largest_contours, frame, car_offset)
                 else:
                     if largest_contours_target != []:
+                        driveForward(1)
                         drive_towards_target(largest_contours_target, frame, car_offset)
                     else:
                         print("Field is Empty!")
-                        driveBackward(100)
+                        driveBackward(1)
 
         # Break the loop if 'q' is pressed
         key = cv2.waitKey(1) & 0xFF
