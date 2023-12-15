@@ -127,8 +127,8 @@ def find_and_draw_boundary():
         # Define the lower and upper bounds for the target color in RGB
         lower_bound_objects = np.array([75, 0, 0])
         upper_bound_objects = np.array([255, 50, 50])
-        lower_bound_target = np.array([75, 75, 30])
-        upper_bound_target = np.array([125, 125, 60])
+        lower_bound_target = np.array([15, 45, 20])
+        upper_bound_target = np.array([90, 100, 40])
 
         # Create a mask using the inRange function
         mask_objects = cv2.inRange(
