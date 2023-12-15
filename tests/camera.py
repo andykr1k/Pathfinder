@@ -20,10 +20,12 @@ def find_largest_contours(mask, min_area=500, min_height=50):
 def find_and_draw_boundary():
     cap = cv2.VideoCapture(0)
     car_offset = 50
-
+    frame_counter = 0
     while True:
+        frame_counter += 1
         ret, frame = cap.read()
         frame = cv2.flip(frame, 0)
+        frame = cv2.flip(frame, 1)
 
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
@@ -76,6 +78,21 @@ def find_and_draw_boundary():
                         font_scale, (0, 255, 0), font_thickness)
 
         cv2.imshow('Result', frame)
+
+        if frame_counter % 15 == 0:
+            if largest_contours_objects != []:
+                if largest_contours_target != []:
+                    if cv2.contourArea(largest_contours_objects[0])/2 > cv2.contourArea(largest_contours_target[0]):
+                        print("Drive Towards Largest Box - Obstacle")
+                    else:
+                        print("Drive Toward Box - Target")
+                else:
+                    print("Drive Towards Largest Box - Obstacle")
+            else:
+                if largest_contours_target != []:
+                        print("Drive Toward Box - Target")
+                else:
+                    print("Field is Empty!")
 
         key = cv2.waitKey(1) & 0xFF
         if key == ord('q'):

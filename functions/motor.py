@@ -75,21 +75,21 @@ def clean():
 def celebrateSideToFront():
     driveRight(100)
     driveLeft(100)
-    driveRight(200)
-    driveLeft(200)
+    driveRight(100)
+    driveLeft(100)
     return
 
 def celebrateRight():
     GPIO.output(d1_in3, True)
     GPIO.output(d1_in1, True)
-    sleep(5)
+    sleep(6)
     TurnOffPins()
     return
 
 def adjustStraight():
     GPIO.output(d1_in3, True)
     GPIO.output(d1_in1, True)
-    sleep(0.2)
+    sleep(0.15)
     TurnOffPins()
     return
 
@@ -100,6 +100,7 @@ def driveForward():
     GPIO.output(d1_in4, True)
     sleep(1)
     TurnOffPins()
+    adjustStraight()
     return
 
 def driveBackward(area):
@@ -116,7 +117,7 @@ def driveLeft(x):
     GPIO.output(d2_in3, True)
     GPIO.output(d1_in1, True)
     GPIO.output(d1_in3, True)
-    sleep(x/200)
+    sleep(0.5)
     TurnOffPins()
     return
 
@@ -125,6 +126,6 @@ def driveRight(x):
     GPIO.output(d2_in4, True)
     GPIO.output(d1_in2, True)
     GPIO.output(d1_in4, True)
-    sleep(x/200)
+    sleep(0.5)
     TurnOffPins()
     return

@@ -19,7 +19,7 @@ def drive_towards_target(target_contour, frame, car_offset):
     print("Target Midpoint:" + str(x + w // 2 - frame.shape[1] // 2))
     print("Area of Target:" + str(area))
     # Check if the box is centered horizontally
-    center_threshold = 40  # Adjust as needed
+    center_threshold = 50  # Adjust as needed
     norm_x = x + w // 2 - frame.shape[1] // 2
     if area > 35000:
         celebrate()
@@ -43,20 +43,23 @@ def drive_around_box(norm_x):
     center_threshold = 40 
     print("Driving Around Largest Box")
     if norm_x > center_threshold:
-        driveRight(350)
+        driveRight(1)
+        driveRight(1)
         driveForward()
         driveForward()
-        driveLeft(350)
+
     elif norm_x < -1*center_threshold:
         driveLeft(350)
+        driveLeft(350)
         driveForward()
         driveForward()
-        driveRight(350)
+
     else:
         driveRight(350)
+        driveRight(350)
         driveForward()
         driveForward()
-        driveLeft(350)
+
     TurnOffPins()
     return
 
@@ -200,10 +203,10 @@ def find_and_draw_boundary():
         # Display the result
         cv2.imshow('Result', frame)
 
-        if frame_counter % 15 == 0:
+        if frame_counter % 10 == 0:
                 if largest_contours != []:
                     if largest_contours_target != []:
-                        if cv2.contourArea(largest_contours[0]) > cv2.contourArea(largest_contours_target[0]):
+                        if cv2.contourArea(largest_contours[0])/2 > cv2.contourArea(largest_contours_target[0]):
                             drive_towards_largest_box(largest_contours, frame, car_offset)
                         else:
                             drive_towards_target(largest_contours_target, frame, car_offset)
@@ -215,6 +218,7 @@ def find_and_draw_boundary():
                         drive_towards_target(largest_contours_target, frame, car_offset)
                     else:
                         print("Field is Empty!")
+                        driveBackward(100)
 
         # Break the loop if 'q' is pressed
         key = cv2.waitKey(1) & 0xFF
