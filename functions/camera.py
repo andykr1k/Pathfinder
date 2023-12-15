@@ -5,10 +5,7 @@ from functions.motor import *
 
 def celebrate():
     print("Found Target! Celebration Mode!!!")
-    driveRight(100)
-    driveLeft(100)
-    driveRight(100)
-    driveLeft(100)
+    celebrateSideToFront()
     celebrateRight()
     return
 
