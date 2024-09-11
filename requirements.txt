@@ -1,2 +1,5 @@
 opencv-python
 RPIO
+assemblyai[extras]
+openai
+elevenlabs==0.3.0b0
