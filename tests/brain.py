@@ -72,7 +72,7 @@ class AI_Assistant:
 
 
     def on_close(self):
-        #print("Closing Session")
+        print("Closing Session")
         return
 
 ###### Step 3: Pass real-time transcript to OpenAI ######
